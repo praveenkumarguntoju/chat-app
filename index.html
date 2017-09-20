@@ -36,6 +36,7 @@
        debugger;
         name = document.getElementById("userName").value;
     if(name.length){
+        socket.emit('clientName',{sendTest :name});
         document.getElementById("messageBox").style.display = "block" ;
     } }
 
