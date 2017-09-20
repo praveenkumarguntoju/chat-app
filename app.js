@@ -62,6 +62,6 @@ socket.on('disconnect',function(){
 });
 });
 
-http.listen(8082,function(){
+http.listen(process.env.PORT || 8082,function(){
     console.log("The server started.");
 })
