@@ -64,8 +64,19 @@
 
    socket.on('broadcast',function(data){
               debugger;
-			//   document.body.innerHTML = '';
-			//   document.write(data.description);
+ if(data.disconnectUser == name){
+      className = "rightSide row";
+      messageName = "messageRight";
+      pointer = "pointerRight";
+     }else{
+       className = "leftSide row";
+       messageName = "messageLeft";
+       pointer = "pointerLeft";
+     };
+              debugger;
+  if(data.disconnectUser){
+   document.getElementById('dataContent').innerHTML += "<div class='" +className+"'>"+ "<label style='font-weight:bold;'>" + data.disconnectUser + "</label>"+  "<div class='"+ pointer+"'></div>" +"<div class='"+ messageName+"'>" + data.disconnectUser + "left" +"</div>" +"</div>"+"<br/>"
+  }
    });
 </script>
 
