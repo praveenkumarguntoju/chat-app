@@ -6,6 +6,9 @@
   "scripts": {
      "start": "node app.js"
   },
+  "Procfile":{
+   "web": "node app.js"
+  }
   "author": "praveen",
   "license": "ISC",
   "dependencies": {
