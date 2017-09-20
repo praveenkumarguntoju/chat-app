@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head><title>Hello world</title></head>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    var name;
+   socket.on('message',function(data){
+    //    document.writeln(data);
+   });
+  socket.on('testEvent',function(data){
+    //   document.writeln(data.description);
+  });
+   function send(event){
+    debugger;
+    if(event.keyCode == 13 || event.target.type == "submit"){
+    var value = document.getElementById("DataSend").value;
+    var fileData = document.getElementsByName("filetoupload")[0].files;
+    if(fileData.length){
+     var reader = new FileReader();
+        reader.readAsDataURL(fileData[0]);
+        reader.onload = function () {
+            console.log(reader.result);
+    socket.emit('clientEvent',{FileData : reader.result,sendName : name});
+      }
+    }else {
+      if(value){
+   socket.emit('clientEvent',{sendData : value,sendName : name});
+      }
+    }
+    }
+   }
+   function addUser(){
+       debugger;
+        name = document.getElementById("userName").value;
+    if(name.length){
+        document.getElementById("messageBox").style.display = "block" ;
+    } }
+
+   
+   socket.on('passData',function(data){
+     messageName = "";
+     if(data.userName == name){
+      className = "rightSide row";
+      messageName = "messageRight";
+      pointer = "pointerRight";
+     }else{
+       className = "leftSide row";
+       messageName = "messageLeft";
+       pointer = "pointerLeft";
+     };
+
+
+     if(data.fileValue){
+       var text =  document.getElementById('dataContent').innerHTML += "<div id='pointer'></div>"+"<div class='" +className+"'>"+"<label style='font-weight:bold;'>" + data.userName + "</label>" +  "<div class='imageData'>" + "<img class='thumb' src='" + data.fileValue +"'>"+ "</div>"+"</div>" +"<br/>"
+     }else{
+       var text =  document.getElementById('dataContent').innerHTML += "<div class='" +className+"'>"+ "<label style='font-weight:bold;'>" + data.userName + "</label>"+  "<div class='"+ pointer+"'></div>" +"<div class='"+ messageName+"'>" + data.description +"</div>" +"</div>"+"<br/>"
+     }
+     document.getElementsByName("filetoupload")[0].value = "";
+     document.getElementById("DataSend").value = "";
+   })
+
+   socket.on('broadcast',function(data){
+              debugger;
+			//   document.body.innerHTML = '';
+			//   document.write(data.description);
+   });
+</script>
+
+<style>
+  img{
+     height:135px;
+     width:60%;
+     border-radius:8px;
+     margin-bottom: 5px;
+  }
+ .messageRight{
+    box-shadow: -2px 4px 6px 1px #90b565;
+    background-color: #99e442;
+    border-radius: 18px;
+    margin-left: 24%;
+    padding: 5px;
+    word-wrap: break-word;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .messageLeft{
+    background-color: #f5f5ed;
+    box-shadow: 3px 3px 4px 1px #888888;
+    border-radius: 18px;
+    margin-right: 24%;
+    padding: 5px;
+    word-wrap: break-word;
+    text-align: center;
+    margin-bottom: 4px
+  }
+  .pointerRight{
+    margin-left: 85%;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 2px solid transparent;
+    border-bottom: 8px solid #99e442;
+
+ }
+ .pointerLeft{
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 16px solid transparent;
+    border-bottom: 9px solid #f5f5ed;
+    margin-left: 6%;
+ }
+.rightSide {
+    float:right;
+    margin-top: 10px;
+    margin-right: 0px;
+    width: 100%;
+    text-align: right;
+}
+.leftSide {float:left;
+   margin-top: 10px;
+    width: 100%;
+    margin-left: 0px;
+ text-align: left;
+}
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+</style>
+
+   <body>
+   <!--<div style="width:100px"> -->
+   <div class="container-fluid" style="padding-left:2%">
+   <div class="row">
+   <div class="input-group"  style="padding-top:10px;max-width:25%">
+    <span class="input-group-addon">Set User Name</span>
+    <input id="userName" onblur="addUser()" type="text" class="form-control col-md-6"  placeholder="UserName">
+   </div>
+   </div>
+   <div class="input-group" id="messageBox"  style="display:none;padding-top:10px;width:25%">
+   <div id="dataContent" style="position:relative;"></div>
+    <!--<input type="file" name="filetoupload" accept="file_extension|audio/*|video/*|image/*|media_type">-->
+    
+   <div class="input-group">
+      <input type="text" class="form-control" id="DataSend" onkeydown="send(event)" placeholder="Message">
+    <div class="input-group-btn">
+       <button class="btn btn-default" onclick="send(event)">Send</button>
+    </div>
+    </div>
+    <div class="fileUpload btn btn-primary">
+    <span>Upload</span>
+    <input type="file" class="upload"  name="filetoupload" />
+    </div>
+   </div>
+  </div>
+   <!--</div>-->
+  </body>
+</html>
