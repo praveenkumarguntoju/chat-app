@@ -1,7 +1,6 @@
 var app = require("express")();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var formidable = require('formidable');
 var fs = require('fs');
 
 app.get('/',function(req,res){
