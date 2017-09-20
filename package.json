@@ -4,7 +4,7 @@
   "description": "A project for socket i.o.",
   "main": "app.js",
   "scripts": {
-     "start": "node server.js"
+     "start": "node app.js"
   },
   "author": "praveen",
   "license": "ISC",
