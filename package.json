@@ -8,7 +8,7 @@
   },
   "Procfile":{
    "web": "node app.js"
-  }
+  },
   "author": "praveen",
   "license": "ISC",
   "dependencies": {
