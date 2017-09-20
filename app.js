@@ -34,7 +34,7 @@ io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
 //clients disconnected
  socket.on('disconnect', function () {
 	       clients--;
-	         io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
+	        io.sockets.emit('broadcast',{ disconnectUser : socket.userName});
  });
 //end
 
@@ -49,6 +49,10 @@ setTimeout(function() {
 }, 2000);
 
 // end
+//client name	
+socket.on('clientName', function(data){
+    socket['userName'] = data.sendTest;
+ });
 
 // custome event from client
 socket.on('clientEvent', function(data){
@@ -57,9 +61,9 @@ socket.on('clientEvent', function(data){
  });
 //end
 
-socket.on('disconnect',function(){
-    console.log('User disconnected.');
-});
+// socket.on('disconnect',function(){
+//     console.log('User disconnected.');
+// });
 });
 
 http.listen(process.env.PORT || 8082,function(){
