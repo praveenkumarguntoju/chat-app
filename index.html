@@ -49,11 +49,13 @@
      var userDetails = data.userData 
      
      for(var i = 0; i < userDetails.length; i++) {
-       var item = document.createElement('li');
-       item.innerHTML += "<span class='activeIcon glyphicon glyphicon-ok-sign'></span>";
-        var usertitle = userDetails[i].userName;
-        item.appendChild(document.createTextNode(usertitle));
-        list.appendChild(item);
+       var usertitle = userDetails[i].userName;
+       if(usertitle){
+          var item = document.createElement('li');
+          item.innerHTML += "<span class='activeIcon glyphicon glyphicon-ok-sign'></span>";
+          item.appendChild(document.createTextNode(usertitle));
+          list.appendChild(item);
+       }
     }
     });
 
