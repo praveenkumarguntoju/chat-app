@@ -39,6 +39,23 @@
         socket.emit('clientName',{sendTest :name});
         document.getElementById("messageBox").style.display = "block" ;
     } }
+  
+//   user active changes
+    socket.on('userList',function(data){
+      var list = document.getElementById('listOnline');
+          list.innerHTML = "";
+    
+      var item = document.getElementsByClassName('listData');
+     var userDetails = data.userData 
+     
+     for(var i = 0; i < userDetails.length; i++) {
+       var item = document.createElement('li');
+       item.innerHTML += "<span class='activeIcon glyphicon glyphicon-ok-sign'></span>";
+        var usertitle = userDetails[i].userName;
+        item.appendChild(document.createTextNode(usertitle));
+        list.appendChild(item);
+    }
+    });
 
    
    socket.on('passData',function(data){
@@ -88,6 +105,15 @@
      border-radius:8px;
      margin-bottom: 5px;
   }
+   .activeIcon{
+       color: #21ef21;
+       font-size: 11px;
+   };
+   ul {
+    list-style: none; /* Remove list bullets */
+    padding: 0;
+    margin: 0;
+      }
  .messageRight{
     box-shadow: -2px 4px 6px 1px #90b565;
     background-color: #99e442;
@@ -160,12 +186,18 @@
    <!--<div style="width:100px"> -->
    <div class="container-fluid" style="padding-left:2%">
    <div class="row">
-   <div class="input-group"  style="padding-top:10px;max-width:25%">
-    <span class="input-group-addon">Set User Name</span>
-    <input id="userName" onblur="addUser()" type="text" class="form-control col-md-6"  placeholder="UserName">
+   <div class="col-md-3"  style="padding-top:10px;max-width:25%">
+    <span class="">Set User Name</span>
+    <input id="userName" onblur="addUser()" type="text" class=""  placeholder="UserName">
+   </div>
+     <div class="col-md-3"style="padding-top: 15px;padding-left: 0px;">
+       <ul id="listOnline">
+    </ul>
    </div>
    </div>
-   <div class="input-group" id="messageBox"  style="display:none;padding-top:10px;width:25%">
+   
+     
+    <div class="input-group" id="messageBox"  style="display:none;padding-top:10px;width:25%">
    <div id="dataContent" style="position:relative;"></div>
     <!--<input type="file" name="filetoupload" accept="file_extension|audio/*|video/*|image/*|media_type">-->
     
