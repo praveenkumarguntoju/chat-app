@@ -51,7 +51,18 @@ setTimeout(function() {
 // end
 //client name	
 socket.on('clientName', function(data){
-    socket['userName'] = data.sendTest;
+   socket['userName'] = data.sendTest;
+    var socketObjs  =io.sockets.sockets;
+    var userLogin = []
+    var tObj = {};
+    for(var i in socketObjs){
+       tObj = {};
+      tObj.userName = socketObjs[i].userName;
+      tObj.id = i;
+      userLogin.push(tObj);
+        debugger;
+    }
+    io.sockets.emit('userList',{userData:userLogin});
  });
 
 // custome event from client
