@@ -34,6 +34,16 @@ io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
 //clients disconnected
  socket.on('disconnect', function () {
 	       clients--;
+	    var socketObjs  =io.sockets.sockets;
+            var userLogin = []
+            var tObj = {};
+            for(var i in socketObjs){
+                     tObj = {};
+                     tObj.userName = socketObjs[i].userName;
+                     tObj.id = i;
+                     userLogin.push(tObj);
+                     }
+                io.sockets.emit('userList',{userData:userLogin});
 	        io.sockets.emit('broadcast',{ disconnectUser : socket.userName});
  });
 //end
