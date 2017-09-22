@@ -2,6 +2,7 @@
 <html>
   <head><title>Hello world</title></head>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -13,18 +14,28 @@
   socket.on('testEvent',function(data){
     //   document.writeln(data.description);
   });
-   function send(event){
-    debugger;
+
+function chatToggle(event){
+          var actEle = document.getElementsByClassName("direct-chat-contacts")[0];
+          var chatActive = actEle.style.transform;
+        if(chatActive != "initial"){
+            actEle.style.transform = "initial";
+            }else{
+            actEle.style.transform = "translate(107%,0)"
+            }
+}
+ function send(event){
     if(event.keyCode == 13 || event.target.type == "submit"){
     var value = document.getElementById("DataSend").value;
-    var fileData = document.getElementsByName("filetoupload")[0].files;
-    if(fileData.length){
-     var reader = new FileReader();
-        reader.readAsDataURL(fileData[0]);
-        reader.onload = function () {
-            console.log(reader.result);
-    socket.emit('clientEvent',{FileData : reader.result,sendName : name});
-      }
+    var fileData;
+    // var fileData = document.getElementsByName("filetoupload")[0].files;
+    if(fileData){
+    //  var reader = new FileReader();
+    //     // reader.readAsDataURL(fileData[0]);
+    //     reader.onload = function () {
+    //         console.log(reader.result);
+    // socket.emit('clientEvent',{FileData : reader.result,sendName : name});
+    //   }
     }else {
       if(value){
    socket.emit('clientEvent',{sendData : value,sendName : name});
@@ -34,70 +45,86 @@
    }
    function addUser(){
        debugger;
-        name = document.getElementById("userName").value;
-    if(name.length){
-        socket.emit('clientName',{sendTest :name});
-        document.getElementById("messageBox").style.display = "block" ;
-    } }
-  
-//   user active changes
+       name = document.getElementById("userName").value;
+           if(name.length){
+                    socket.emit('clientName',{sendTest :name});
+                    document.getElementsByClassName("direct-chat")[0].style.display = "block" ;
+        } 
+    };
+
     socket.on('userList',function(data){
-      var list = document.getElementById('listOnline');
-          list.innerHTML = "";
-    
-      var item = document.getElementsByClassName('listData');
-     var userDetails = data.userData 
-     
+          var list = document.getElementById('contacts-list');
+              list.innerHTML = "";
+      var userDetails = data.userData 
      for(var i = 0; i < userDetails.length; i++) {
        var usertitle = userDetails[i].userName;
-       if(usertitle){
-          var item = document.createElement('li');
-          item.innerHTML += "<span class='activeIcon glyphicon glyphicon-ok-sign'></span>";
-          item.appendChild(document.createTextNode(usertitle));
-          list.appendChild(item);
-       }
+        if(usertitle){
+         var item = document.createElement('li');
+         item.innerHTML  += "<div class='contacts-list-info'>" +
+                            "<span  class='activeIcon glyphicon glyphicon-ok-sign'></span>"+
+                            "<span  class='contacts-list-name'>"+
+                              usertitle
+                             + "</span></div>"
+         list.appendChild(item);
+        }
     }
+      console.log(data);
+      debugger;
     });
 
    
    socket.on('passData',function(data){
-     messageName = "";
-     if(data.userName == name){
-      className = "rightSide row";
-      messageName = "messageRight";
-      pointer = "pointerRight";
+// chat box
+   if(data.userName == name){
+         MesagePosition= "direct-chat-msg";
+         chatName = "direct-chat-name pull-left";
+         timeStamp = "direct-chat-timestamp pull-right";
+         pointer = "pointerRight";
      }else{
-       className = "leftSide row";
-       messageName = "messageLeft";
-       pointer = "pointerLeft";
+         MesagePosition = "direct-chat-msg right";
+         chatName = "direct-chat-name pull-right";
+         timeStamp = "direct-chat-timestamp pull-left";
+         pointer = "pointerLeft";
      };
 
+if(data.fileValue){
+ 
+ }else{
+var todayTime = new Date(new Date().getTime()).toLocaleTimeString();
+document.getElementsByClassName("direct-chat-messages")[0].innerHTML +=
+                "<div class='" +MesagePosition+"'>" + "<div class='direct-chat-info clearfix'>"+ 
+                "<span class='"+chatName+"'>"+data.userName+"</span>"+
+                "<span class='"+ timeStamp +"'>"+ todayTime +"</span></div>" +
+                "<i class=' fa fa-user-circle direct-chat-img'></i>"+
+                "<div class='direct-chat-text'>"+ data.description +"</div></div>"
+};
 
-     if(data.fileValue){
-       var text =  document.getElementById('dataContent').innerHTML += "<div id='pointer'></div>"+"<div class='" +className+"'>"+"<label style='font-weight:bold;'>" + data.userName + "</label>" +  "<div class='imageData'>" + "<img class='thumb' src='" + data.fileValue +"'>"+ "</div>"+"</div>" +"<br/>"
-     }else{
-       var text =  document.getElementById('dataContent').innerHTML += "<div class='" +className+"'>"+ "<label style='font-weight:bold;'>" + data.userName + "</label>"+  "<div class='"+ pointer+"'></div>" +"<div class='"+ messageName+"'>" + data.description +"</div>" +"</div>"+"<br/>"
-     }
-     document.getElementsByName("filetoupload")[0].value = "";
-     document.getElementById("DataSend").value = "";
+    //  document.getElementsByName("filetoupload")[0].value = "";
+    //  document.getElementById("DataSend").value = "";
    })
 
    socket.on('broadcast',function(data){
-              debugger;
- if(data.disconnectUser == name){
-      className = "rightSide row";
-      messageName = "messageRight";
-      pointer = "pointerRight";
-     }else{
-       className = "leftSide row";
-       messageName = "messageLeft";
-       pointer = "pointerLeft";
-     };
+            if(data.userName == name){
+                    MesagePosition= "direct-chat-msg";
+                    chatName = "direct-chat-name pull-left";
+                    timeStamp = "direct-chat-timestamp pull-right";
+                    pointer = "pointerRight";
+                 }else{
+                   MesagePosition = "direct-chat-msg right";
+                   chatName = "direct-chat-name pull-right";
+                   timeStamp = "direct-chat-timestamp pull-left";
+                   pointer = "pointerLeft";
+              };
               debugger;
   if(data.disconnectUser){
-   document.getElementById('dataContent').innerHTML += "<div class='" +className+"'>"+ "<label style='font-weight:bold;'>" + data.disconnectUser + "</label>"+  "<div class='"+ pointer+"'></div>" +"<div class='"+ messageName+"'>" + data.disconnectUser + "  "+"left" +"</div>" +"</div>"+"<br/>"
-  }
-   });
+      document.getElementsByClassName("direct-chat-messages")[0].innerHTML +=
+                "<div class='" +MesagePosition+"'>" + "<div class='direct-chat-info clearfix'>"+ 
+                "<span class='"+chatName+"'>"+data.disconnectUser+"</span>"+
+                "<span class='"+ timeStamp +"'>"+ todayTime +"</span></div>" +
+                "<i class=' fa fa-user-circle direct-chat-img'></i>"+
+                "<div class='direct-chat-text'>"+  data.disconnectUser +" " + "left." +"</div></div>"
+                }
+    	 });
 </script>
 
 <style>
@@ -106,63 +133,13 @@
      width:60%;
      border-radius:8px;
      margin-bottom: 5px;
-    }
-  
-  .activeIcon{
+  }
+ .activeIcon{
        color: #21ef21;
        font-size: 11px;
-      }
+       display: inline;
+ };
 
- .messageRight{
-    box-shadow: -2px 4px 6px 1px #90b565;
-    background-color: #99e442;
-    border-radius: 18px;
-    margin-left: 24%;
-    padding: 5px;
-    word-wrap: break-word;
-    text-align: center;
-    margin-bottom: 4px;
-  }
-  .messageLeft{
-    background-color: #f5f5ed;
-    box-shadow: 3px 3px 4px 1px #888888;
-    border-radius: 18px;
-    margin-right: 24%;
-    padding: 5px;
-    word-wrap: break-word;
-    text-align: center;
-    margin-bottom: 4px
-  }
-  .pointerRight{
-    margin-left: 85%;
-    width: 0;
-    height: 0;
-    border-left: 15px solid transparent;
-    border-right: 2px solid transparent;
-    border-bottom: 8px solid #99e442;
-
- }
- .pointerLeft{
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 16px solid transparent;
-    border-bottom: 9px solid #f5f5ed;
-    margin-left: 6%;
- }
-.rightSide {
-    float:right;
-    margin-top: 10px;
-    margin-right: 0px;
-    width: 100%;
-    text-align: right;
-}
-.leftSide {float:left;
-   margin-top: 10px;
-    width: 100%;
-    margin-left: 0px;
- text-align: left;
-}
 .fileUpload {
     position: relative;
     overflow: hidden;
@@ -179,44 +156,309 @@
     opacity: 0;
     filter: alpha(opacity=0);
 }
-  ul{
+
+ul{
     list-style: none; 
     padding: 0;
     margin: 0;
 }
+
+/*chartbox styles*/
+.box.box-primary {
+    border-top-color: #3c8dbc;
+}
+.box {
+    position: relative;
+    border-radius: 3px;
+    background: #ffffff;
+    border-top: 3px solid #d2d6de;
+    margin-bottom: 20px;
+    width: 100%;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.box-header.with-border {
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.box-header {
+    color: #444;
+    display: block;
+    padding: 10px;
+    position: relative;
+}
+
+header .box-title {
+    display: inline-block;
+    font-size: 18px;
+    margin: 0;
+    line-height: 1;
+}
+
+.box-header>.box-tools {
+    position: absolute;
+    right: 10px;
+    top: 15px;
+}
+
+.box-header>.box-tools [data-toggle="tooltip"] {
+    position: relative;
+}
+
+.bg-light-blue, .label-primary, .modal-primary .modal-body {
+    background-color: #3c8dbc !important;
+}
+.btn {
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 1px solid transparent;
+}
+
+.btn-box-tool {
+    padding: 5px;
+    font-size: 12px;
+    background: transparent;
+    color: #97a0b3;
+}
+
+
+
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.direct-chat .box-body {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    position: relative;
+    overflow-x: hidden;
+    padding: 0;
+}
+
+.box-body {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    padding: 10px;
+}
+
+.direct-chat-messages, .direct-chat-contacts {
+    transition: transform .5s ease-in-out;
+}
+
+
+.direct-chat-messages {
+    transform: translate(0, 0);
+    padding: 10px;
+    height: 400px;
+    overflow: auto;
+}
+
+.direct-chat-msg {
+    margin-bottom: 10px;
+}
+
+.direct-chat-msg, .direct-chat-text {
+    display: block;
+}
+.direct-chat-info {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 12px;
+}
+
+.direct-chat-name {
+    font-weight: 600;
+}
+
+.direct-chat-timestamp {
+    color: #999;
+}
+
+.direct-chat-img {
+    border-radius: 50%;
+    float: left;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+}
+.direct-chat-text {
+    border-radius: 5px;
+    position: relative;
+    padding: 5px 10px;
+    background: #d2d6de;
+    border: 1px solid #d2d6de;
+    margin: 5px 0 0 50px;
+    color: #444;
+    word-wrap: break-word;
+}
+
+.direct-chat-text {
+    display: block;
+}
+.direct-chat-msg {
+    margin-bottom: 10px;
+}
+
+.direct-chat-info {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 12px;
+}
+
+.direct-chat-name {
+    font-weight: 600;
+}
+
+.direct-chat-contacts {
+    transform: translate(101%, 0);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 250px;
+    width: 100%;
+    background: #222d32;
+    color: #fff;
+    overflow: auto;
+}
+
+#contacts-list, .users-list, .mailbox-attachments {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.contacts-list-img {
+    border-radius: 50%;
+    width: 40px;
+    float: left;
+}
+
+.contacts-list-info {
+    margin-left: 10px;
+    color: #fff;
+   min-height: 35px;
+}
+
+.contacts-list-name {
+    font-weight: 600;
+    display: inline;
+}
+.contacts-list-name, .contacts-list-status {
+    display: inline;
+    padding-left: 15px;
+}
+.contacts-list-date {
+    color: #aaa;
+    font-weight: normal;
+}
+.box-footer {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top: 1px solid #f4f4f4;
+    padding: 10px;
+    background-color: #fff;
+}
+.content {
+    min-height: 250px;
+    padding: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.content-wrapper {
+    min-height: 100%;
+    background-color: #ecf0f5;
+    z-index: 800;
+    height: 635px;
+}
+
+.right .direct-chat-img {
+    float: right;
+}
+.right .direct-chat-text {
+    margin-right: 50px;
+    margin-left: 0;
+}
+.direct-chat-primary .right>.direct-chat-text {
+    background: #3c8dbc;
+    border-color: #3c8dbc;
+    color: #fff;
+}
+
+
 </style>
 
    <body>
-   <!--<div style="width:100px"> -->
-   <div class="container-fluid" style="padding-left:2%">
-   <div class="row">
-   <div class="col-md-3"  style="padding-top:10px;max-width:25%">
-    <span class="">Set User Name</span>
-    <input id="userName" onblur="addUser()" type="text" class=""  placeholder="UserName">
-   </div>
-     <div class="col-md-3"style="padding-top: 15px;padding-left: 0px;">
-       <ul id="listOnline">
-    </ul>
-   </div>
-   </div>
-   
-     
-    <div class="input-group" id="messageBox"  style="display:none;padding-top:10px;width:25%">
-   <div id="dataContent" style="position:relative;"></div>
-    <!--<input type="file" name="filetoupload" accept="file_extension|audio/*|video/*|image/*|media_type">-->
-    
-   <div class="input-group">
-      <input type="text" class="form-control" id="DataSend" onkeydown="send(event)" placeholder="Message">
-    <div class="input-group-btn">
-       <button class="btn btn-default" onclick="send(event)">Send</button>
+<!--chartbox-->
+<div class="wrapper" style="height: auto; min-height: 100%;">
+<div class="content-wrapper">
+<section class="content">
+ <div class="row">
+    <div class="col-md-3">
+        <div class="input-group">
+              <input type="text" class="form-control" id="userName" onblur="addUser()" placeholder="Enter username...." >
+                      <span class="input-group-btn">
+                         <button class="btn btn-primary btn-flat" onclick ="addUser()">Tap to chat</button>
+                      </span>
+        </div>
     </div>
-    </div>
-    <div class="fileUpload btn btn-primary">
-    <span>Upload</span>
-    <input type="file" class="upload"  name="filetoupload" />
-    </div>
-   </div>
+ </div>
+<div class="row">
+ <div class="col-md-3">
+    <div class="box box-primary direct-chat direct-chat-primary " style="display:none;">
+            <div class="box-header with-border">
+              <h4 class="box-title">Start Chat</h4>
+              <div class="box-tools pull-right">
+                <!--<span data-toggle="tooltip" title="" class="badge bg-light-blue" data-original-title="3 New Messages">3</span>-->
+                <button type="button" class="btn btn-box-tool"  onclick="chatToggle(event)" data-toggle="tooltip" title="" data-widget="chat-pane-toggle" data-original-title="Contacts">
+                  <i class="fa fa-comments" style="font-size: 20px;"></i></button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="direct-chat-messages">
+              </div>
+
+              <!-- Contacts are loaded here -->
+              <div class="direct-chat-contacts">
+                <ul id="contacts-list">
+                  <!-- End Contact Item -->
+                </ul>
+                <!-- /.contatcts-list -->
+              </div>
+              <!-- /.direct-chat-pane -->
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="DataSend" onkeydown="send(event)" placeholder="Type Message ..." >
+                      <span class="input-group-btn">
+                         <button class="btn btn-primary btn-flat" onclick="send(event)">Send</button>
+                           <!--<div class="fileUpload btn btn-primary">
+                              <span>Upload</span>
+                                 <input type="file" class="upload"  name="filetoupload" />
+                              </div>-->
+                      </span>
+                </div>
+            </div>
+            <!-- /.box-footer-->
+          </div>
+
   </div>
-   <!--</div>-->
-  </body>
+  </section>
+</div>
+</div>
+</div>
+<!--end-->
+</body>
 </html>
