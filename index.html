@@ -14,7 +14,11 @@
   socket.on('testEvent',function(data){
     //   document.writeln(data.description);
   });
-
+function scrollWindow(event){
+ setTimeout(function() {
+       window.scrollTo(0,0);
+ }, 0);
+}
 function chatToggle(event){
           var actEle = document.getElementsByClassName("direct-chat-contacts")[0];
           var chatActive = actEle.style.transform;
@@ -444,7 +448,7 @@ header .box-title {
             <!-- /.box-body -->
             <div class="box-footer">
                 <div class="input-group">
-                  <input type="text" class="form-control" id="DataSend" onkeydown="send(event)" placeholder="Type Message ..." >
+                  <input type="text" class="form-control" onblur="scrollWindow(this)" id="DataSend" onkeydown="send(event)" placeholder="Type Message ..." >
                       <span class="input-group-btn">
                          <button class="btn btn-primary btn-flat" onclick="send(event)">Send</button>
                            <!--<div class="fileUpload btn btn-primary">
