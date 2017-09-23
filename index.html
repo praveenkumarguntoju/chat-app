@@ -98,7 +98,8 @@ document.getElementsByClassName("direct-chat-messages")[0].innerHTML +=
                 "<i class=' fa fa-user-circle direct-chat-img'></i>"+
                 "<div class='direct-chat-text'>"+ data.description +"</div></div>"
 };
-
+  var objDiv = document.getElementsByClassName("direct-chat-messages")[0];
+     objDiv.scrollTop = objDiv.scrollHeight;
     //  document.getElementsByName("filetoupload")[0].value = "";
     //  document.getElementById("DataSend").value = "";
    })
@@ -123,6 +124,8 @@ document.getElementsByClassName("direct-chat-messages")[0].innerHTML +=
                 "<span class='"+ timeStamp +"'>"+ todayTime +"</span></div>" +
                 "<i class=' fa fa-user-circle direct-chat-img'></i>"+
                 "<div class='direct-chat-text'>"+  data.disconnectUser +" " + "left." +"</div></div>"
+      var objDiv = document.getElementsByClassName("direct-chat-messages")[0];
+     objDiv.scrollTop = objDiv.scrollHeight;
                 }
     	 });
 </script>
@@ -404,7 +407,7 @@ header .box-title {
 <div class="content-wrapper">
 <section class="content">
  <div class="row">
-    <div class="col-md-3">
+    <div class="col-xs-12 col-sm-6 col-md-3">
         <div class="input-group">
               <input type="text" class="form-control" id="userName" onblur="addUser()" placeholder="Enter username...." >
                       <span class="input-group-btn">
@@ -414,7 +417,7 @@ header .box-title {
     </div>
  </div>
 <div class="row">
- <div class="col-md-3">
+ <div class="col-xs-12 col-sm-6 col-md-3">
     <div class="box box-primary direct-chat direct-chat-primary " style="display:none;">
             <div class="box-header with-border">
               <h4 class="box-title">Start Chat</h4>
