@@ -122,6 +122,7 @@ document.getElementsByClassName("direct-chat-messages")[0].innerHTML +=
               };
               debugger;
   if(data.disconnectUser){
+     var todayTime = new Date(new Date().getTime()).toLocaleTimeString();
       document.getElementsByClassName("direct-chat-messages")[0].innerHTML +=
                 "<div class='" +MesagePosition+"'>" + "<div class='direct-chat-info clearfix'>"+ 
                 "<span class='"+chatName+"'>"+data.disconnectUser+"</span>"+
