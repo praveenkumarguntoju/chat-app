@@ -62,7 +62,10 @@ function chatToggle(event){
                      $('#sendButton').bind('touchstart mousedown click', function(e){
                             var value = document.getElementById("DataSend").value;
                            if(value){
-                                audio.play();
+                                setTimeout(function() {
+                                       audio.play();
+                                   }, 0);
+                               
                            }
                             });
         } 
