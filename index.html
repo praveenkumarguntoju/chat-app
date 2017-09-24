@@ -59,11 +59,11 @@ function chatToggle(event){
            if(name.length){
                     socket.emit('clientName',{sendTest :name});
                     document.getElementsByClassName("direct-chat")[0].style.display = "block" ;
-                     $('#sendButton').bind('touchstart mousedown click', function(e){
-                            var value = document.getElementById("DataSend").value;
-                           if(value)
-                                audio.play();
-                            });
+                    //  $('#sendButton').bind('touchstart mousedown click', function(e){
+                    //         var value = document.getElementById("DataSend").value;
+                    //        if(value)
+                    //             audio.play();
+                    //         });
         } 
     };
 
@@ -105,6 +105,9 @@ function chatToggle(event){
 if(data.fileValue){
  
  }else{
+       if(data.description)
+        audio.play();
+        };
 var todayTime = new Date(new Date().getTime()).toLocaleTimeString();
 document.getElementsByClassName("direct-chat-messages")[0].innerHTML +=
                 "<div class='" +MesagePosition+"'>" + "<div class='direct-chat-info clearfix'>"+ 
