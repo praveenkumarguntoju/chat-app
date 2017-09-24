@@ -388,7 +388,7 @@ header .box-title {
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
     border-top: 1px solid #f4f4f4;
-    padding: 10px;
+    /*padding: 10px;*/
     background-color: #fff;
 }
 .content {
@@ -418,6 +418,9 @@ header .box-title {
     color: #fff;
     border-radius: 0px 11px 11px 0px;
 }
+#sendButton{
+    background-color: #51859e;
+}
 
 
 </style>
@@ -445,7 +448,7 @@ header .box-title {
               <div class="box-tools pull-right">
                 <!--<span data-toggle="tooltip" title="" class="badge bg-light-blue" data-original-title="3 New Messages">3</span>-->
                 <button type="button" class="btn btn-box-tool"  onclick="chatToggle(event)" data-toggle="tooltip" title="" data-widget="chat-pane-toggle" data-original-title="Contacts">
-                  <i class="fa fa-comments" style="font-size: 20px;"></i></button>
+                  <i class="fa fa-comments" style="font-size:20px;color: black;"></i></button>
               </div>
             </div>
             <!-- /.box-header -->
@@ -467,7 +470,7 @@ header .box-title {
                 <div class="input-group">
                   <input type="text" class="form-control" onblur="scrollWindow(this)" id="DataSend" onkeydown="send(event)" placeholder="Type Message ..." >
                       <span class="input-group-btn">
-                         <button class="btn btn-primary btn-flat" id="sendButton" onclick="send(event)">Send</button>
+                         <button class="btn  btn-flat" id="sendButton" onclick="send(event)">Send</button>
                            <!--<div class="fileUpload btn btn-primary">
                               <span>Upload</span>
                                  <input type="file" class="upload"  name="filetoupload" />
