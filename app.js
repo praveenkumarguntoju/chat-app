@@ -1,8 +1,13 @@
+var express = require('express');
 var app = require("express")();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
 
+
+app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/images'));
+app.use(express.static(__dirname + '/audio'));
 app.get('/',function(req,res){
     res.sendfile('index.html');
 });

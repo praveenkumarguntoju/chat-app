@@ -13,6 +13,7 @@
 <script>
     var socket = io();
     var name;
+     var audio = new Audio('return.m4r');
    socket.on('message',function(data){
     //    document.writeln(data);
    });
@@ -58,6 +59,11 @@ function chatToggle(event){
            if(name.length){
                     socket.emit('clientName',{sendTest :name});
                     document.getElementsByClassName("direct-chat")[0].style.display = "block" ;
+                     $('#sendButton').bind('touchstart mousedown click', function(e){
+                            var value = document.getElementById("DataSend").value;
+                           if(value)
+                                audio.play();
+                            });
         } 
     };
 
@@ -456,7 +462,7 @@ header .box-title {
                 <div class="input-group">
                   <input type="text" class="form-control" onblur="scrollWindow(this)" id="DataSend" onkeydown="send(event)" placeholder="Type Message ..." >
                       <span class="input-group-btn">
-                         <button class="btn btn-primary btn-flat" onclick="send(event)">Send</button>
+                         <button class="btn btn-primary btn-flat" id="sendButton" onclick="send(event)">Send</button>
                            <!--<div class="fileUpload btn btn-primary">
                               <span>Upload</span>
                                  <input type="file" class="upload"  name="filetoupload" />
